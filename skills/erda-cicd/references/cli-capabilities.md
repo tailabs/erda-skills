@@ -18,6 +18,7 @@ The CLI exposes a `pipeline` command group focused on execution and inspection:
 - `pipeline status` can infer the latest pipeline on the current branch when no pipeline ID is given
 - `pipeline history` filters by branch, sources, statuses, and yml names
 - `pipeline logs` supports `--task-id`, `--task`, `--all`, `--failed`, `--running`, `--watch`, `--tail`, `--stream`, `--json`, and `--raw`
+- `pipeline run` diagnostics are significantly more useful with `-V`
 
 ## Typical Command Playbooks
 
@@ -36,6 +37,7 @@ Notes:
 - the current directory must be a git repository
 - the workspace must be clean before `pipeline run`
 - when branch is omitted, the current git branch is used
+- prefer `erda-cli -V pipeline run ...` when the user is debugging a failure, not just triggering a run
 
 ### Check Current Pipeline State
 
@@ -64,6 +66,11 @@ erda-cli pipeline history --page 2 --page-size 10
 erda-cli pipeline history --yml-names pipeline.yml
 ```
 
+Notes:
+
+- use history early to confirm whether the current branch has already produced successful runs
+- this often tells you whether the problem is new, branch-specific, or environment-specific
+
 ### Read Task Logs
 
 Use when the user has a failing pipeline or needs output from a concrete task:
@@ -87,9 +94,11 @@ Notes:
 When the user says "the pipeline failed" or "CI/CD is stuck", default to this order:
 
 1. confirm repo context, branch, org, project, and application
-2. locate the run with `pipeline status` or `pipeline history`
-3. inspect failed or running tasks with `pipeline logs`
-4. separate pipeline execution failure from downstream delivery or runtime failure
+2. verify read access and recent history with `pipeline history`
+3. verify workspace cleanliness with `git status --short`
+4. if a run exists, inspect it with `pipeline status` or `pipeline logs`
+5. if the user is creating a new run, use `erda-cli -V pipeline run ...`
+6. separate context failure, permission failure, pipeline execution failure, and downstream runtime failure
 
 ## Validation Prompts
 
@@ -103,6 +112,9 @@ Use these prompts to verify the skill behaves correctly after installation:
 
 - Prefer the command that matches the user’s task exactly instead of collapsing everything into “check the pipeline”.
 - Distinguish between creating a run, checking status, looking at historical runs, and reading task logs.
+- Do not treat `whoami` success as proof that pipeline creation permission exists.
+- Treat dirty-workspace handling as a first-class branch in the workflow.
+- Prefer a temporary clean clone over worktree when the user needs to preserve local changes.
 - If a deployment failed, determine whether the failure happened in pipeline execution or later in runtime behavior.
 - If the user asks about static `pipeline.yml`, keep the answer tied to how it affects actual `erda-cli` execution paths.
 
