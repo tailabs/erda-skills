@@ -7,23 +7,30 @@ if [[ "${1:-}" == "--quiet" ]]; then
   quiet=1
 fi
 
-if ! command -v erda >/dev/null 2>&1; then
+cli_bin=""
+if command -v erda-cli >/dev/null 2>&1; then
+  cli_bin="erda-cli"
+elif command -v erda >/dev/null 2>&1; then
+  cli_bin="erda"
+fi
+
+if [[ -z "$cli_bin" ]]; then
   if [[ "$quiet" -eq 0 ]]; then
     cat <<'EOF'
-erda-cli was not found in PATH.
+Neither erda-cli nor erda was found in PATH.
 
 Install erda-cli first, then authenticate before using ERDA skills.
 Typical verification commands:
-  erda version
-  erda whoami
+  erda-cli version
+  erda-cli whoami
 EOF
   fi
   exit 1
 fi
 
 if [[ "$quiet" -eq 0 ]]; then
-  echo "erda-cli detected: $(command -v erda)"
+  echo "ERDA CLI detected: ${cli_bin} ($(command -v "${cli_bin}"))"
   echo "Next checks:"
-  echo "  erda version"
-  echo "  erda whoami"
+  echo "  ${cli_bin} version"
+  echo "  ${cli_bin} whoami"
 fi
