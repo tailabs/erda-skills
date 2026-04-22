@@ -13,7 +13,6 @@
     "registry": "https://repo.terminus.io/api/npm/skills/"
   },
   "scripts": {
-    "check": "bash shared/scripts/check-erda-cli.sh --quiet",
     "pack:dry-run": "npm pack --dry-run"
   },
   "keywords": [
