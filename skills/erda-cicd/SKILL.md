@@ -33,11 +33,12 @@ This skill is backed by command knowledge and working assets:
 1. Verify CLI availability with the skill-local doctor script or direct probing from [`references/prerequisites.md`](references/prerequisites.md).
 2. Identify the repository context, branch, workspace, org, project, and application.
 3. Before `pipeline run`, check `git status --short`.
-4. If the workspace is dirty, do not default to commit, stash, or discard. Prefer a temporary clean clone, not a git worktree.
-5. In a temporary clean clone, verify `git remote -v` and `.erda.d/config` or equivalent project context before running the pipeline.
-6. Use the minimal diagnostic sequence from [`references/diagnostics.md`](references/diagnostics.md): `whoami`, `pipeline history`, then `erda-cli -V pipeline run ...`.
-7. Separate context discovery failure, permission failure, and pipeline execution failure.
-8. When giving commands, prefer exact subcommands and flags over abstract descriptions.
+4. If the workspace is dirty, stop. Treat this as a hard prerequisite failure and require the user to commit the intended changes first.
+5. Only use a temporary clean clone as a secondary troubleshooting or reproduction technique, not as the default path for running new pipeline content.
+6. In a temporary clean clone, verify `git remote -v` and `.erda.d/config` or equivalent project context before running the pipeline.
+7. Use the minimal diagnostic sequence from [`references/diagnostics.md`](references/diagnostics.md): `whoami`, `pipeline history`, then `erda-cli -V pipeline run ...`.
+8. Separate context discovery failure, permission failure, and pipeline execution failure.
+9. When giving commands, prefer exact subcommands and flags over abstract descriptions.
 
 ## Review Priorities
 
@@ -45,6 +46,7 @@ This skill is backed by command knowledge and working assets:
 - missing pipeline context such as pipeline ID, task name, or application binding
 - missing repository context such as `.erda.d/config` or correct `origin`
 - confusion between run creation, status inspection, history inspection, and log inspection
+- attempts to run pipelines from uncommitted workspace content
 - read permission versus run permission mismatches
 - delivery failures that are actually earlier build failures
 - commands that skip authentication or repository cleanliness requirements
