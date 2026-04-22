@@ -53,10 +53,11 @@ The concrete validation prompts are bundled in:
 
 Both skills depend on `erda-cli`.
 
-Quick check:
+Quick checks:
 
 ```bash
-bash shared/scripts/check-erda-cli.sh
+bash skills/erda-cicd/scripts/doctor.sh
+bash skills/erda-runtime/scripts/doctor.sh
 ```
 
 ## Repository Layout
@@ -72,7 +73,4 @@ skills/
     references/
     scripts/
     SKILL.md
-shared/
-  references/
-  scripts/
 ```
