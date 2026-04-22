@@ -22,6 +22,18 @@ erda-cli runtime --help
 
 If the local executable is `erda` rather than `erda-cli`, use the same commands with `erda`.
 
+## Failure Note
+
+If `whoami` fails, do not immediately assume the user is logged out.
+
+Possible causes include:
+
+- missing authentication
+- network reachability problems
+- proxy or gateway restrictions
+
+Confirm the failure mode before concluding that the local login state is invalid.
+
 ## Fallback Rule
 
 If any helper file is unavailable, do not block on the missing file. Fall back to direct CLI probing and continue with the diagnosis.

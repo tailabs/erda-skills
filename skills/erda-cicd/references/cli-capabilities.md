@@ -90,6 +90,39 @@ Notes:
 - `--failed` is the fastest path when the user only wants failed task logs
 - `--raw` should only be used for a single task selection
 
+### Inspect A Successful Pipeline For Transient Issues
+
+Use when the final pipeline result is `Success` but the user wants to know whether the process had brief readiness or probe failures:
+
+```bash
+erda-cli pipeline logs -i 123456 --all --tail 500
+```
+
+Notes:
+
+- do not rely on the final success state alone when the user asks about deployment stability
+- a successful run can still contain short-lived `ProbeFailed`, not-ready, or retry events
+
+## After A Successful Run
+
+When a pipeline run succeeds, continue with these steps:
+
+```bash
+erda-cli pipeline status -i <pipelineID> --watch
+```
+
+After the pipeline succeeds:
+
+- record identifiers surfaced by the pipeline output, especially `deploymentID` or `runtimeID` when available
+- if the user asks whether the deployment is healthy after the run, switch to runtime-oriented checks
+- if `runtimeID` is not printed directly, recover the runtime scope by application and workspace in `erda-runtime`
+
+Switch to `erda-runtime` when:
+
+- the pipeline already succeeded and the question is about current workload health
+- the user asks whether services, pods, or instances are healthy after deployment
+- the user wants instance-level logs rather than pipeline task logs
+
 ## Troubleshooting Sequence
 
 When the user says "the pipeline failed" or "CI/CD is stuck", default to this order:
@@ -117,6 +150,7 @@ Use these prompts to verify the skill behaves correctly after installation:
 - Do not treat `whoami` success as proof that pipeline creation permission exists.
 - Treat dirty-workspace handling as a hard gate for `pipeline run`, not a soft suggestion.
 - Only mention a temporary clean clone for troubleshooting or reproduction, not as the primary way to run uncommitted changes.
+- If the user asks whether the deployment was stable, inspect `pipeline logs --all` even when the final result is `Success`.
 - If a deployment failed, determine whether the failure happened in pipeline execution or later in runtime behavior.
 - If the user asks about static `pipeline.yml`, keep the answer tied to how it affects actual `erda-cli` execution paths.
 

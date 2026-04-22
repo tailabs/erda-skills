@@ -8,6 +8,7 @@ Use this sequence by default when the user wants to run or troubleshoot a pipeli
 
 ```bash
 erda-cli whoami
+git status --short
 erda-cli pipeline history --branch <branch>
 erda-cli -V pipeline run <file> --branch <branch>
 ```
@@ -85,12 +86,14 @@ Distinguish:
 1. login/auth is valid
 2. read access is valid
 3. pipeline creation permission is valid
+4. the branch is visible to ERDA
 
 Examples:
 
 - `erda-cli whoami` succeeds: authentication exists
 - `erda-cli pipeline history --branch <branch>` succeeds: read path likely works
 - `erda-cli -V pipeline run <file> --branch <branch>` returns `403 AccessDenied`: run permission or resolved context is still wrong
+- `erda-cli pipeline history --branch <branch>` is empty and `pipeline run` reports an invalid branch or cannot fetch commit information: the branch may only exist locally
 
 ## Decision Tree
 
@@ -120,6 +123,26 @@ Likely cause:
 
 - missing permission to create pipelines for that application or branch
 
+### Case 3: Branch Exists Locally But Is Not Visible To ERDA
+
+Typical symptoms:
+
+- `git branch --show-current` shows the branch locally
+- `erda-cli pipeline history --branch <branch>` returns nothing
+- `erda-cli -V pipeline run <file> --branch <branch>` reports an invalid branch or cannot fetch commit information
+
+Likely cause:
+
+- the branch has not been pushed to the remote ERDA-visible repository yet
+
+Recommended actions:
+
+```bash
+git push origin <branch>
+erda-cli pipeline history --branch <branch>
+erda-cli -V pipeline run <file> --branch <branch>
+```
+
 ## Debug Defaults
 
 When the user is troubleshooting a failing run, prefer `-V` by default:
@@ -134,11 +157,12 @@ The verbose request and response details are often the shortest path to the real
 
 1. verify CLI availability
 2. verify login with `whoami`
-3. verify read access with `pipeline history`
-4. verify repository cleanliness with `git status --short`
-5. if dirty, stop and require a commit before `pipeline run`
-6. if troubleshooting requires a reproduction environment, choose a safe clean-clone strategy
-7. in a clean clone, verify `git remote -v`
-8. verify `.erda.d/config` or equivalent context
-9. run `erda-cli -V pipeline run ...`
-10. classify the failure as context, permission, or pipeline-execution failure
+3. verify repository cleanliness with `git status --short`
+4. if dirty, stop and require a commit before `pipeline run`
+5. verify read access with `pipeline history`
+6. if the branch is missing from history, check whether it has been pushed
+7. if troubleshooting requires a reproduction environment, choose a safe clean-clone strategy
+8. in a clean clone, verify `git remote -v`
+9. verify `.erda.d/config` or equivalent context
+10. run `erda-cli -V pipeline run ...`
+11. classify the failure as context, branch visibility, permission, or pipeline-execution failure

@@ -14,6 +14,20 @@
 
 ## Runtime Command Playbooks
 
+## From A Pipeline Run To Runtime Scope
+
+When a runtime question comes immediately after a pipeline run, recover the runtime scope in this order:
+
+1. read `runtimeID` directly from the pipeline watch or final output when available
+2. if `runtimeID` is not available, use application and workspace context with `erda-cli runtime list`
+
+Example:
+
+```bash
+erda-cli runtime list --workspace TEST
+erda-cli runtime status --runtime-id 10001
+```
+
 ### List Runtimes
 
 Use when the user wants to discover the runtime or identify the current workspace target:
@@ -67,6 +81,18 @@ Always verify `erda-cli` availability and authentication first. If the user want
 3. inspect service logs and failing components
 4. inspect resource pressure and configuration drift
 5. only then suggest restart, redeploy, or scale actions
+
+## Current State Versus Deployment-Time State
+
+`runtime status` only describes the current state.
+
+If the user asks "was there any issue during deployment?" or "did anything go wrong before it became healthy?", do not conclude from `runtime status: Healthy` alone.
+
+Required behavior:
+
+- inspect pipeline logs for deployment-time failures or retries
+- inspect runtime instance list and runtime logs for process-level symptoms
+- treat current healthy state and deployment-time stability as separate questions
 
 ## Validation Prompts
 
