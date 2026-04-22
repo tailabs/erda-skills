@@ -121,10 +121,20 @@ Supported blocks:
 - `path`
 - `duration`
 
+Notes:
+
+- `duration` is an integer field.
+- write it as a plain number such as `90`, not as a duration string such as `90s`.
+
 ### `health_check.exec`
 
 - `cmd`
 - `duration`
+
+Notes:
+
+- `duration` is an integer field.
+- write it as a plain number such as `90`, not as a duration string such as `90s`.
 
 ## `services.<name>.sidecars.<name>`
 

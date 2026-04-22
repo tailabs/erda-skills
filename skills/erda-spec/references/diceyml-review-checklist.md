@@ -102,11 +102,13 @@ Check:
 - whether the chosen check type matches the service behavior
 - whether HTTP check ports and paths are valid
 - whether exec check commands and durations are plausible
+- whether `health_check.http.duration` and `health_check.exec.duration` are plain integers rather than strings
 
 Common findings:
 
 - HTTP path missing leading slash
 - check attached to the wrong port or command
+- duration written as `90s` instead of `90`
 
 ## Addons
 

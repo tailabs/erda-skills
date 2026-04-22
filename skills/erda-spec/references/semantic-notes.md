@@ -72,6 +72,20 @@ Practical rule:
 
 - “field exists” is not enough. For review tasks, separate structural support from parser-side validation expectations.
 
+## Health Check Duration Is Numeric
+
+`health_check.http.duration` and `health_check.exec.duration` are numeric fields in the ERDA `dice.yml` structures.
+
+High-value implications:
+
+- write duration as an integer such as `90`
+- do not write duration as a human-readable string such as `90s`
+- a string duration can pass a casual YAML review but still fail when the deploy side unmarshals the spec
+
+Practical rule:
+
+- if deployment reports an unmarshal error around `health_check.*.duration`, check for string-style duration values first.
+
 ## `pipeline.yml` Semantic Notes
 
 ## Version `1.0` Is Upgraded Into `1.1`
