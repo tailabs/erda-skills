@@ -36,6 +36,7 @@ Notes:
 
 - the current directory must be a git repository
 - the workspace must be clean before `pipeline run`
+- if the workspace is dirty, stop and commit the intended changes before running new pipeline content
 - when branch is omitted, the current git branch is used
 - prefer `erda-cli -V pipeline run ...` when the user is debugging a failure, not just triggering a run
 
@@ -96,9 +97,10 @@ When the user says "the pipeline failed" or "CI/CD is stuck", default to this or
 1. confirm repo context, branch, org, project, and application
 2. verify read access and recent history with `pipeline history`
 3. verify workspace cleanliness with `git status --short`
-4. if a run exists, inspect it with `pipeline status` or `pipeline logs`
-5. if the user is creating a new run, use `erda-cli -V pipeline run ...`
-6. separate context failure, permission failure, pipeline execution failure, and downstream runtime failure
+4. if the workspace is dirty and the user wants to run new content, stop and require a commit first
+5. if a run exists, inspect it with `pipeline status` or `pipeline logs`
+6. if the user is creating a new run, use `erda-cli -V pipeline run ...`
+7. separate context failure, permission failure, pipeline execution failure, and downstream runtime failure
 
 ## Validation Prompts
 
@@ -113,8 +115,8 @@ Use these prompts to verify the skill behaves correctly after installation:
 - Prefer the command that matches the user’s task exactly instead of collapsing everything into “check the pipeline”.
 - Distinguish between creating a run, checking status, looking at historical runs, and reading task logs.
 - Do not treat `whoami` success as proof that pipeline creation permission exists.
-- Treat dirty-workspace handling as a first-class branch in the workflow.
-- Prefer a temporary clean clone over worktree when the user needs to preserve local changes.
+- Treat dirty-workspace handling as a hard gate for `pipeline run`, not a soft suggestion.
+- Only mention a temporary clean clone for troubleshooting or reproduction, not as the primary way to run uncommitted changes.
 - If a deployment failed, determine whether the failure happened in pipeline execution or later in runtime behavior.
 - If the user asks about static `pipeline.yml`, keep the answer tied to how it affects actual `erda-cli` execution paths.
 

@@ -29,14 +29,23 @@ Changes should be committed first
 
 Skill behavior:
 
-- do not default to telling the user to commit, stash, or discard local changes
-- first explain that the CLI requires a clean working tree
-- when the user wants to preserve local changes, recommend a temporary clean clone
-- do not recommend `git worktree` as the default workaround
+- treat this as a hard blocker for `pipeline run`
+- explicitly tell the user that new pipeline content must be committed before execution
+- require the user to commit the intended changes first
+- do not present temporary clean clone as the default way to run new, uncommitted content
+
+Recommended response pattern:
+
+```bash
+git status --short
+git add .
+git commit -m "..."
+erda-cli pipeline run ./pipeline.yml
+```
 
 ## Temporary Clean Clone Guidance
 
-Prefer a normal clone over `git worktree`.
+Prefer a normal clone over `git worktree` only for troubleshooting or reproduction.
 
 Why:
 
@@ -127,8 +136,9 @@ The verbose request and response details are often the shortest path to the real
 2. verify login with `whoami`
 3. verify read access with `pipeline history`
 4. verify repository cleanliness with `git status --short`
-5. if dirty, choose a safe clean-clone strategy
-6. in a clean clone, verify `git remote -v`
-7. verify `.erda.d/config` or equivalent context
-8. run `erda-cli -V pipeline run ...`
-9. classify the failure as context, permission, or pipeline-execution failure
+5. if dirty, stop and require a commit before `pipeline run`
+6. if troubleshooting requires a reproduction environment, choose a safe clean-clone strategy
+7. in a clean clone, verify `git remote -v`
+8. verify `.erda.d/config` or equivalent context
+9. run `erda-cli -V pipeline run ...`
+10. classify the failure as context, permission, or pipeline-execution failure
