@@ -1,0 +1,30 @@
+{
+  "name": "erda-skills",
+  "version": "1.0.0",
+  "description": "ERDA skill collection for erda-cli driven CI/CD and runtime workflows",
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "skills",
+    "shared",
+    "README.md"
+  ],
+  "publishConfig": {
+    "registry": "https://repo.terminus.io/api/npm/skills/"
+  },
+  "scripts": {
+    "check": "bash shared/scripts/check-erda-cli.sh --quiet",
+    "pack:dry-run": "npm pack --dry-run"
+  },
+  "keywords": [
+    "erda",
+    "skills",
+    "pipeline",
+    "cicd",
+    "ci",
+    "cd",
+    "runtime",
+    "erda-cli",
+    "github"
+  ]
+}

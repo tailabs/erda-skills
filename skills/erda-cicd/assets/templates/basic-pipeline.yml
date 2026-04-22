@@ -1,0 +1,15 @@
+version: "1.1"
+
+stages:
+  - stage:
+      - git-checkout:
+          alias: repo
+          params:
+            depth: 1
+  - stage:
+      - custom-script:
+          alias: lint
+          image: registry.example.com/library/alpine:3.19
+          commands:
+            - cd ${repo}
+            - echo "run lint here"
