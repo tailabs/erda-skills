@@ -25,8 +25,7 @@ Skills are intentionally backed by more than a single markdown file:
 This repository is intended to be distributed from GitHub, for example:
 
 ```bash
-npx skills install-skill-from-github --repo tailabs/erda-skills --path skills/erda-cicd
-npx skills install-skill-from-github --repo tailabs/erda-skills --path skills/erda-runtime
+npx skills add tailabs/erda-skills
 ```
 
 ## Validate Installed Skills
