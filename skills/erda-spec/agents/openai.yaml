@@ -1,0 +1,4 @@
+interface:
+  display_name: "ERDA Spec"
+  short_description: "Review and author ERDA spec and pipeline configuration"
+  default_prompt: "Use $erda-spec to review or draft dice.yml and pipeline.yml using ERDA-supported fields, action capabilities, and best practices."
