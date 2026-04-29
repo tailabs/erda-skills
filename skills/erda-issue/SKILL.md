@@ -1,6 +1,6 @@
 ---
 name: erda-issue
-description: Create and manage ERDA issues via `erda-cli`, including user-confirmed state progression (`next`/`update`) and optional parent-child binding (`bind`).
+description: ERDA issue management via `erda-cli` — create `bug`/`task`/`requirement` issues, bind parent-child with `erda-cli issue bind`, and guide user-confirmed state transitions using `erda-cli issue schema` + `erda-cli issue update` (plan-only `next`).
 ---
 
 # ERDA Issue
@@ -14,13 +14,30 @@ It supports:
 - `update`: set an explicit target state (user confirms before `erda-cli issue update`)
 - `bind`: parent/child issue binding (`inclusion` vs `connection`), also behind confirmation
 
+## Keywords
+
+This skill explicitly covers these command surfaces and intents (useful for automatic skill matching):
+
+- `erda-cli issue create`
+- `erda-cli issue schema`
+- `erda-cli issue list`
+- `erda-cli issue update`
+- `erda-cli issue bind`
+- `issue state transitions`
+- `create bug` / `create task` / `create requirement`
+- `next` (plan-only proposal) / `update` (explicit target)
+- `inclusion` / `connection` binding
+
 ## Use This Skill For
 
 - creating ERDA issues (bug / task / requirement)
+- run `erda-cli issue create` (after confirmation)
 - guiding issue state transitions using `erda-cli issue schema`
 - when the user says “go to the next step”, proposing the next target state and asking for confirmation
+- run `erda-cli issue update` (by explicit `--state` or `--state-id`, after confirmation)
 - binding tasks to requirements (default relation: `inclusion`)
 - binding issues as an association (relation: `connection`) when the user explicitly requests “关联/associated”
+- run `erda-cli issue bind` for parent/child relations (after confirmation)
 
 ## Safety Gates (Hard Rules)
 
